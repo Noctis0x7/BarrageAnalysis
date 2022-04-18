@@ -39,9 +39,8 @@
             <div class="navbar-nav w-100">
                 <a href="index" class="nav-item nav-link"><i class="fa fa-th me-2"></i>首 页</a>
                 <a href="upload" class="nav-item nav-link"><i class="fa fa-file-alt me-2"></i>上传数据集</a>
-                <a href="preprocess_storage" class="nav-item nav-link active"><i
-                        class="fa fa-laptop me-2"></i>情感分析</a>
-                <a href="analysis" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>情感分析</a>
+                <a href="preprocess_storage" class="nav-item nav-link"><i class="fa fa-laptop me-2"></i>预处理和储存</a>
+                <a href="analysis" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2 active"></i>情感分析</a>
                 <a href="result" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>分析结果</a>
                 {#                <a href="history" class="nav-item nav-link"><i class="fa fa-table me-2"></i>历史数据</a>#}
             </div>
@@ -70,8 +69,9 @@
                 <div class="d-flex align-items-center justify-content-between mb-4">
                     <h6 class="mb-0">情感分析</h6>
                 </div>
+
                 <div class="col-md-10 text-center m-auto">
-                    {% if flag == -1 %}
+                    {% if flag == 0 %}
                         <div class="rounded h-100 p-4">
                             <h6 class="mb-4">已爬取或上传数据集</h6>
                             <div class="table-responsive">
@@ -95,35 +95,6 @@
                                 </table>
                             </div>
                         </div>
-                    {% elif flag == 0 %}
-                        <div class="rounded h-100 p-4">
-                            <h6 class="mb-4">原始数据集(只展示前10条)</h6>
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">原始弹幕内容</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for value in list %}
-                                        <tr>
-                                            <th scope="row">{{ forloop.counter }}</th>
-                                            <td>{{ value }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <form action="preprocess" method="get">
-                                <input type="hidden" name="bv" value="{{ bv }}">
-                                <div class="m-auto text-center">
-                                    <button type="submit" class="btn btn-primary" id="submit_btn">预处理</button>
-                                </div>
-                            </form>
-                        </div>
-
                     {% elif flag == 1 %}
                         <div class="h-100 p-4">
                             <h6 class="mb-4">预处理后数据集(只展示前10条)</h6>
@@ -153,15 +124,6 @@
                             </form>
                         </div>
                     {% else %}
-                        <div>
-                            {{ store_msg }}
-                        {% if s_flag == 1 %}
-                            <br>
-                            <h3>
-                                <a href="analysis?bv={{ bv }}">开始情感分析</a>
-                            </h3>
-                        {% endif %}
-                        </div>
                     {% endif %}
                 </div>
             </div>

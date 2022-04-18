@@ -20,7 +20,7 @@ class Process:
     def __init__(self, bv):
         self.bv = bv
         self.raw_dataset = pd.read_csv('./resources/raw_dataset/' + self.bv + '.csv', engine='python',
-                                       error_bad_lines=False)
+                                       on_bad_lines='skip')
         self.flag = False
         self.msg = None
         self.s_flag = 0

@@ -1,8 +1,10 @@
 from django.shortcuts import render, HttpResponse
+
+from barrage.analysis import Analysis
 from barrage.crawl import BarrageCrawl
 from barrage.process import Process
 import pandas as pd
-from barrage.models import RawDataSet, Barrage
+from barrage.models import Video, Barrage
 import os
 
 
@@ -19,7 +21,7 @@ def barrage_crawl(request):
     spider = BarrageCrawl(bv)
     spider.run()
     if spider.flag == 1:
-        RawDataSet(bv).save()
+        Video.objects.create(bv=bv, status=0)
         flag = True
     return render(request, 'uploadResult.html', {
         'msg': spider.msg,
@@ -48,7 +50,7 @@ def upload_file(request):
                 # 分块写入文件
                 for chunk in up_file.chunks():
                     f.write(chunk)
-            RawDataSet(bv).save()
+            Video.objects.create(bv=bv, status=0)
             return render(request, 'uploadResult.html', {
                 'msg': '上传成功',
                 'currentMsg': '上传结果',
@@ -67,7 +69,7 @@ def upload_file(request):
 def preprocess_store(request):
     bv = request.GET.get('bv')
     if None is bv:
-        rawlist = list(RawDataSet.objects.all().values_list(flat=True))
+        rawlist = list(Video.objects.exclude(status=2).values_list(flat=True))
         return render(request, 'preprocess.html', {
             'flag': -1,
             'rawlist': rawlist
@@ -88,7 +90,9 @@ def preprocess(request):
     Process(bv).preprocess()
     dataset = pd.read_csv('./resources/dataset/' + bv + '.csv', nrows=10)
     short_list = dataset.content.tolist()
-    RawDataSet.objects.get(bv=bv).delete()
+    video = Video.objects.get(bv=bv)
+    video.status = 1
+    video.save()
     # path = './resources/raw_dataset/' + bv + '.csv'
     # if os.path.exists(path):
     #     os.remove(path)
@@ -116,7 +120,16 @@ def store(request):
 
 # 情感分析
 def analysis(request):
-    return
+    bv = request.GET.get('bv')
+    if bv is not None:
+        Analysis(bv).run()
+        flag = 1
+    else:
+        flag = 0
+    return render(request, 'analysis.html', {
+        'bv': bv,
+        'flag': flag
+    })
 
 
 # 分析结果

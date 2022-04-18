@@ -26,5 +26,6 @@ urlpatterns = [
     path('upload_file', views.upload_file),
     path('preprocess_storage', views.preprocess_store),
     path('preprocess', views.preprocess),
-    path('store', views.store)
+    path('store', views.store),
+    path('analysis', views.analysis)
 ]
