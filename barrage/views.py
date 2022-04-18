@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse
 from barrage.crawl import BarrageCrawl
-from barrage.preprocess import Preprocess
+from barrage.process import Process
 import pandas as pd
 from barrage.models import RawDataSet, Barrage
 import os
@@ -20,10 +20,12 @@ def barrage_crawl(request):
     spider.run()
     if spider.flag == 1:
         RawDataSet(bv).save()
+        flag = True
     return render(request, 'uploadResult.html', {
         'msg': spider.msg,
         'currentMsg': '爬取结果',
-        'bv': bv
+        'bv': bv,
+        'flag': flag
     })
 
 
@@ -61,7 +63,7 @@ def upload_file(request):
         })
 
 
-# 预处理和存储
+# 预处理和存储请求
 def preprocess_store(request):
     bv = request.GET.get('bv')
     if None is bv:
@@ -83,9 +85,9 @@ def preprocess_store(request):
 # 预处理
 def preprocess(request):
     bv = request.GET.get('bv')
-    Preprocess(bv).preprocess()
+    Process(bv).preprocess()
     dataset = pd.read_csv('./resources/dataset/' + bv + '.csv', nrows=10)
-    short_list = dataset.seg_words.tolist()
+    short_list = dataset.content.tolist()
     RawDataSet.objects.get(bv=bv).delete()
     # path = './resources/raw_dataset/' + bv + '.csv'
     # if os.path.exists(path):
@@ -96,35 +98,19 @@ def preprocess(request):
     return render(request, 'preprocess.html', {
         'flag': 1,
         'bv': bv,
-        'list': short_list
+        'list': short_list,
     })
 
 
 # 存储到数据库
 def store(request):
-    try:
-        bv = request.GET.get('bv')
-        dataset = pd.read_csv('./resources/dataset/' + bv + '.csv')
-        content_list = dataset.seg_words.tolist()
-        for content in content_list:
-            Barrage.objects.create(content=content, bv=bv)
-        store_msg = '存储到数据库成功！请选择下一步'
-        s_flag = 1
-        # path = './resources/dataset/' + bv + '.csv'
-        # if os.path.exists(path):
-        #     os.remove(path)
-        # else:
-        #     print('文件不存在：' + path)
-
-    except Exception as e:
-        print(e)
-        store_msg = '存储失败！'
-        s_flag = 0
-
+    bv = request.GET.get('bv')
+    ps = Process(bv)
+    ps.stroe()
     return render(request, 'preprocess.html', {
         'bv': bv,
-        'store_msg': store_msg,
-        's_flag': s_flag
+        'store_msg': ps.msg,
+        's_flag': ps.s_flag
     })
 
 

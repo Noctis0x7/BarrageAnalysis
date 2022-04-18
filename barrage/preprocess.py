@@ -18,10 +18,10 @@ class Preprocess:
         # 数据清洗
         self.raw_dataset['content'] = re_sub_vec(self.raw_dataset['content'])
         # 文本分词
-        self.raw_dataset['content_list'] = self.raw_dataset['content'].map(self.sentence_split)
-        seg_word = jieba4null()
-        self.raw_dataset.loc[:, 'seg_words'] = self.raw_dataset['content_list'].map(seg_word.cut_sentence)
-        self.raw_dataset = self.raw_dataset.drop(['content', 'content_list'], axis=1)
+        # self.raw_dataset['content_list'] = self.raw_dataset['content'].map(self.sentence_split)
+        # seg_word = jieba4null()
+        # self.raw_dataset.loc[:, 'seg_words'] = self.raw_dataset['content_list'].map(seg_word.cut_sentence)
+        # self.raw_dataset = self.raw_dataset.drop(['content', 'content_list'], axis=1)
         # 存储处理后数据集
         self.raw_dataset.to_csv('./resources/dataset/' + self.bv + '.csv', encoding='utf_8', index=None)
 
