@@ -20,3 +20,25 @@ class Barrage(models.Model):
 
     class Meta:
         db_table = 'barrages'
+
+
+class Results(models.Model):
+    bv = models.CharField(max_length=30, primary_key=True)
+    zero = models.IntegerField(default=0)
+    point_one = models.IntegerField(default=0)
+    point_two = models.IntegerField(default=0)
+    point_three = models.IntegerField(default=0)
+    point_four = models.IntegerField(default=0)
+    point_five = models.IntegerField(default=0)
+    point_six = models.IntegerField(default=0)
+    point_seven = models.IntegerField(default=0)
+    point_eight = models.IntegerField(default=0)
+    point_nine = models.IntegerField(default=0)
+    one = models.IntegerField(default=0)
+    positive = models.IntegerField(default=0)
+    negative = models.IntegerField(default=0)
+    total = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = 'analysis_results'
+

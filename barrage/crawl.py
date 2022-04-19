@@ -18,7 +18,7 @@ class BarrageCrawl:
     # 弹幕都是在一个url请求中，该url请求在视频url的js脚本中构造
     def getXml_url(self):
         # 获取该视频网页的内容
-        response = requests.get(self.BVurl, headers= self.headers)
+        response = requests.get(self.BVurl, headers=self.headers)
         html_str = response.content.decode()
 
         # 使用正则找出该弹幕地址
@@ -62,18 +62,3 @@ class BarrageCrawl:
             self.msg = '爬取失败，请检查BV号是否正常！'
             print(e)
 
-
-
-
-if __name__ == '__main__':
-        # 测试用例，后期再整合到网页
-        bv_num = "BV1Ba411t7sI"
-        spider = BarrageCrawl(bv_num)
-        spider.run()
-        # time.sleep(1)
-        print(bv_num + ', ' + spider.msg)
-        url = "https://www.bilibili.com/video/BV1iF41147PX"
-        spider = BarrageCrawl(url)
-        spider.run()
-        # time.sleep(1)
-        print(url + ', ' + spider.msg)

@@ -4,7 +4,7 @@ from barrage.analysis import Analysis
 from barrage.crawl import BarrageCrawl
 from barrage.process import Process
 import pandas as pd
-from barrage.models import Video, Barrage
+from barrage.models import Video, Barrage, Results
 import os
 
 
@@ -124,19 +124,34 @@ def analysis(request):
     if bv is not None:
         Analysis(bv).run()
         flag = 1
+        analysis_list = []
     else:
         flag = 0
+        analysis_list = list(Video.objects.filter(status=2).values_list(flat=True))
     return render(request, 'analysis.html', {
         'bv': bv,
-        'flag': flag
+        'flag': flag,
+        'list': analysis_list
     })
 
 
 # 分析结果
 def result(request):
-    return
+    bv = request.GET.get('bv')
+    if bv is not None:
+        a_result = Results.objects.get(bv=bv)
+        return render(request, 'result.html', {
+            'bv': bv,
+            'positive': a_result.positive,
+            'negative': a_result.negative,
+            'data': [a_result.zero, a_result.point_one, a_result.point_two, a_result.point_three, a_result.point_four,
+                     a_result.point_five, a_result.point_six, a_result.point_seven, a_result.point_eight,
+                     a_result.point_nine, a_result.one]
+        })
+    else:
+        results = Video.objects.filter(status=2)
+        return render(request, 'resultlist.html', {
+            'results': results
+        })
 
 
-# 历史记录
-def history(request):
-    return
