@@ -81,13 +81,19 @@
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ video.bv }}</td>
-                                <td>{% if video.sentiments > 0.5 %}
+                                <td>
+                                    {% if video.sentiments > 0.5 %}
                                         积极
+                                    {% elif video.sentiments == 0%}
+                                        情感缺失
                                     {% else %}
                                         消极
                                     {% endif %}
                                 </td>
-                                <td><a class="btn btn-primary" href="result?bv={{ video.bv }}">详情</a></td>
+                                <td>
+                                    <a class="btn btn-primary" href="result?bv={{ video.bv }}">详情</a>
+                                    <a class="btn btn-danger" href="delete?bv={{ video.bv }}">删除</a>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>

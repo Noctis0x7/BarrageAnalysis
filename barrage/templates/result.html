@@ -70,28 +70,47 @@
                             分析结果详细信息
                         </div>
                         <div class="card-body">
-                            <table class="table table-borderless">
-                                <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>John</td>
-                                    <td>Doe</td>
-                                    <td>jhon@email.com</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>mark@email.com</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>jacob@email.com</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <ul class="list-group">
+                                        <li class="list-group-item bg-transparent">
+                                            Bv号:  {{ video.bv }}
+                                        </li>
+                                        <li class="list-group-item bg-transparent">
+                                            情感分值:  {{ video.sentiments }}
+                                        </li>
+                                        <li class="list-group-item bg-transparent">
+                                            情感趋向:
+                                            {% if video.sentiments > 0.5 %}
+                                                积极
+                                            {% else %}
+                                                消极
+                                            {% endif %}
+                                        </li>
+                                        <li class="list-group-item bg-transparent">
+                                            视频播放量:  {{ video.views }}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-8">
+                                    <ul class="list-group">
+                                        <li class="list-group-item bg-transparent">
+                                            视频名称:  {{ video.title }}
+                                        </li>
+                                        <li class="list-group-item bg-transparent">
+                                            视频弹幕数:  {{ result.total }}
+                                        </li>
+                                        <li class="list-group-item bg-transparent">
+                                            up主:  {{ video.up }}
+                                        </li>
+                                        <li class="list-group-item bg-transparent">
+                                            视频链接:  <a href="https://www.bilibili.com/video/{{ bv }}" target="_blank">
+                                            https://www.bilibili.com/video/{{ bv }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -132,7 +151,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            情感折线图
+                            情感倾向图
                         </div>
                         <div class="card-body">
                             <div id="lineGraph" style="width: 100%;height:400px;">
@@ -251,8 +270,8 @@
                     show: false
                 },
                 data: [
-                    {value: {{ positive }}, name: '积极'},
-                    {value: {{ negative }}, name: '消极'}
+                    {value: {{ result.positive }}, name: '积极'},
+                    {value: {{ result.negative }}, name: '消极'}
                 ]
             }
         ]
@@ -260,7 +279,7 @@
 
     var lineGraphOption = {
         title: {
-            text: '弹幕情感分布折线'
+            text: '弹幕情感倾向'
         },
         tooltip: {
             trigger: 'axis'

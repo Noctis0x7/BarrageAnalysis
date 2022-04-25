@@ -17,11 +17,13 @@ def index(request):
 
 # 爬取模块
 def barrage_crawl(request):
-    bv = request.GET.get('bvnumber')
+    bv = request.GET.get('bv')
     spider = BarrageCrawl(bv)
     spider.run()
+    flag = False
+
     if spider.flag == 1:
-        Video.objects.create(bv=bv, status=0)
+        Video.objects.create(bv=bv, status=0, title=spider.title, up=spider.up, views=spider.views)
         flag = True
     return render(request, 'uploadResult.html', {
         'msg': spider.msg,
@@ -127,7 +129,7 @@ def analysis(request):
         analysis_list = []
     else:
         flag = 0
-        analysis_list = list(Video.objects.filter(status=2).values_list(flat=True))
+        analysis_list = list(Video.objects.exclude(status=2).values_list(flat=True))
     return render(request, 'analysis.html', {
         'bv': bv,
         'flag': flag,
@@ -139,14 +141,15 @@ def analysis(request):
 def result(request):
     bv = request.GET.get('bv')
     if bv is not None:
-        a_result = Results.objects.get(bv=bv)
+        video = Video.objects.get(bv=bv)
+        result = Results.objects.get(bv=bv)
         return render(request, 'result.html', {
             'bv': bv,
-            'positive': a_result.positive,
-            'negative': a_result.negative,
-            'data': [a_result.zero, a_result.point_one, a_result.point_two, a_result.point_three, a_result.point_four,
-                     a_result.point_five, a_result.point_six, a_result.point_seven, a_result.point_eight,
-                     a_result.point_nine, a_result.one]
+            'result': result,
+            'data': [result.zero, result.point_one, result.point_two, result.point_three, result.point_four,
+                     result.point_five, result.point_six, result.point_seven, result.point_eight,
+                     result.point_nine, result.one],
+            'video': video
         })
     else:
         results = Video.objects.filter(status=2)
@@ -155,3 +158,10 @@ def result(request):
         })
 
 
+# 删除数据
+def delete(request):
+    bv = request.GET.get('bv')
+    video = Video.objects.get(bv=bv)
+    video.delete()
+    Barrage.objects.filter(bv=bv).delete()
+    return result()

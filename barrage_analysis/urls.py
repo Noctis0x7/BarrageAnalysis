@@ -28,5 +28,6 @@ urlpatterns = [
     path('preprocess', views.preprocess),
     path('store', views.store),
     path('analysis', views.analysis),
-    path('result', views.result)
+    path('result', views.result),
+    path('delete', views.delete)
 ]

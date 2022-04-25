@@ -7,6 +7,9 @@ class Video(models.Model):
     bv = models.CharField(max_length=30, primary_key=True)
     status = models.IntegerField()
     sentiments = models.DecimalField(max_digits=3, decimal_places=2)
+    title = models.CharField(max_length=100)
+    up = models.CharField(max_length=40)
+    views = models.CharField(max_length=10)
 
     class Meta:
         db_table = 'video'

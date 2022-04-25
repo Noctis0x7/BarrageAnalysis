@@ -54,9 +54,10 @@ class Analysis:
         result.negative = result.zero + result.point_one + result.point_two + result.point_three + result.point_four
         result.total = count
         result.save()
-        total = score / count
-        print(total)
-        print(round(total, 2))
+        if count == 0:
+            total = 0
+        else:
+            total = score / count
         video = Video.objects.get(bv=self.bv)
         video.sentiments = round(total, 2)
         video.status = 2

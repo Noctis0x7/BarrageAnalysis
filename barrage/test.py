@@ -1,6 +1,12 @@
+from datetime import datetime
+
 from barrage.models import Barrage, Video
 
 if __name__ == '__main__':
-    v = Video.objects.filter(status=2).values_list()
-    print(v)
+    year = datetime.today().year
+    print(year)
+    pub_time = '04-15'
+    print(pub_time)
+    pub_time = str(year) + '-' + pub_time
+    print(pub_time)
 

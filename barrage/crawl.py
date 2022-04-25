@@ -1,8 +1,10 @@
 # coding=utf-8
+import datetime
 import requests
 import pandas as pd
 from lxml import etree
 import re
+
 
 class BarrageCrawl:
     def __init__(self, BV):
@@ -14,12 +16,26 @@ class BarrageCrawl:
         self.row_cnt = 1
         self.msg = ''
         self.flag = 0
+        # 视频标题
+        self.title = ''
+        # 视频时长
+        self.times = ''
+        # 播放量
+        self.views = 0
+        # 作者名
+        self.up = ''
 
     # 弹幕都是在一个url请求中，该url请求在视频url的js脚本中构造
     def getXml_url(self):
         # 获取该视频网页的内容
         response = requests.get(self.BVurl, headers=self.headers)
         html_str = response.content.decode()
+        title = re.findall("<h1.*>(.*?)</h1>", html_str)[0]
+        self.title = title
+        up = re.findall("<a class=\"name\">(.*?)</a>", html_str)[0]
+        self.up = up
+        views = re.findall("<span class=\"view-stat\">(.*?)</span>", html_str)[0]
+        self.views = views.replace("观看", "")
 
         # 使用正则找出该弹幕地址
         # 格式为：https://comment.bilibili.com/168087953.xml
@@ -61,4 +77,3 @@ class BarrageCrawl:
         except Exception as e:
             self.msg = '爬取失败，请检查BV号是否正常！'
             print(e)
-

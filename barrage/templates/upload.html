@@ -71,7 +71,7 @@
                     <form action="upload_file" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="mb-3">
-                            <label for="formFile" class="form-label">请上传数据集, 格式应为：XX.csv</label>
+                            <label for="formFile" class="form-label">请上传数据集, 格式应为：BV号.csv</label>
                             <input name="upload_file" class="form-control" type="file" id="formFile">
                         </div>
                         <div class="m-auto text-center">
