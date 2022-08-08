@@ -82,7 +82,7 @@
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ video.bv }}</td>
                                 <td>
-                                    {% if video.sentiments > 0.5 %}
+                                    {% if video.sentiments > 0.4 %}
                                         积极
                                     {% elif video.sentiments == 0%}
                                         情感缺失

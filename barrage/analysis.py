@@ -18,7 +18,6 @@ class Analysis:
         count = len(qs)
         result = Results(bv=self.bv)
 
-
         for ele in qs:
             br = Barrage.objects.get(id=ele.id)
             br.sentiments = get_sentiment(ele.content)
@@ -49,9 +48,9 @@ class Analysis:
             score += br.sentiments
             br.save()
 
-        result.positive = result.point_five + result.point_six + result.point_seven + result.point_eight
+        result.positive = result.point_four + result.point_five + result.point_six + result.point_seven + result.point_eight
         + result.point_nine + result.one
-        result.negative = result.zero + result.point_one + result.point_two + result.point_three + result.point_four
+        result.negative = result.zero + result.point_one + result.point_two + result.point_three
         result.total = count
         result.save()
         if count == 0:

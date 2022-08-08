@@ -96,7 +96,7 @@
                         </div>
                     {% elif flag == 0 %}
                         <div class="rounded h-100 p-4">
-                            <h6 class="mb-4">原始数据集(只展示前10条)</h6>
+                            <h6 class="mb-4">原始数据(只展示前10条)</h6>
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead>
@@ -115,23 +115,78 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <form action="preprocess" method="get">
+                            <form action="data_clean" method="get">
                                 <input type="hidden" name="bv" value="{{ bv }}">
                                 <div class="m-auto text-center">
-                                    <button type="submit" class="btn btn-primary" id="submit_btn">预处理</button>
+                                    <button type="submit" class="btn btn-primary" id="submit_btn">进行数据清洗</button>
                                 </div>
                             </form>
                         </div>
-
                     {% elif flag == 1 %}
                         <div class="h-100 p-4">
-                            <h6 class="mb-4">预处理后数据集(只展示前10条)</h6>
+                            <h6 class="mb-4">数据清洗后数据(只展示前10条)</h6>
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">预处理后弹幕内容</th>
+                                        <th scope="col">数据清洗后弹幕内容</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for value in list %}
+                                        <tr>
+                                            <th scope="row">{{ forloop.counter }}</th>
+                                            <td>{{ value }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <form action="word_cut" method="get">
+                                <input type="hidden" name="bv" value="{{ bv }}">
+                                <div class="m-auto text-center">
+                                    <button type="submit" class="btn btn-primary" id="submit_btn">开始文本分词</button>
+                                </div>
+                            </form>
+                        </div>
+                    {% elif flag == 2 %}
+                        <div class="h-100 p-4">
+                            <h6 class="mb-4">文本分词后数据(只展示前10条)</h6>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">文本分词后弹幕内容</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for value in list %}
+                                        <tr>
+                                            <th scope="row">{{ forloop.counter }}</th>
+                                            <td>{{ value }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <form action="stop_words" method="get">
+                                <input type="hidden" name="bv" value="{{ bv }}">
+                                <div class="m-auto text-center">
+                                    <button type="submit" class="btn btn-primary" id="submit_btn">去停用词</button>
+                                </div>
+                            </form>
+                        </div>
+                    {% elif flag == 3 %}
+                        <div class="h-100 p-4">
+                            <h6 class="mb-4">去停用词后数据(只展示前10条)</h6>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">去停用词后弹幕内容</th>
                                     </tr>
                                     </thead>
                                     <tbody>

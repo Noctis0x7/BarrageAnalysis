@@ -5,7 +5,6 @@ from barrage.crawl import BarrageCrawl
 from barrage.process import Process
 import pandas as pd
 from barrage.models import Video, Barrage, Results
-import os
 
 
 # Create your views here.
@@ -23,8 +22,14 @@ def barrage_crawl(request):
     flag = False
 
     if spider.flag == 1:
-        Video.objects.create(bv=bv, status=0, title=spider.title, up=spider.up, views=spider.views)
-        flag = True
+        try:
+            Video.objects.get(bv=bv).delete()
+        except Exception as e:
+            print(e)
+        finally:
+            Video.objects.create(bv=bv, status=0, title=spider.title, up=spider.up, views=spider.views)
+            flag = True
+
     return render(request, 'uploadResult.html', {
         'msg': spider.msg,
         'currentMsg': '爬取结果',
@@ -52,13 +57,18 @@ def upload_file(request):
                 # 分块写入文件
                 for chunk in up_file.chunks():
                     f.write(chunk)
-            Video.objects.create(bv=bv, status=0)
-            return render(request, 'uploadResult.html', {
-                'msg': '上传成功',
-                'currentMsg': '上传结果',
-                'flag': True,
-                'bv': bv
-            })
+            try:
+                Video.objects.get(bv=bv).delete()
+            except Exception as e:
+                print(e)
+            finally:
+                Video.objects.create(bv=bv, status=0)
+                return render(request, 'uploadResult.html', {
+                    'msg': '上传成功',
+                    'currentMsg': '上传结果',
+                    'flag': True,
+                    'bv': bv
+                })
     else:
         return render(request, 'uploadResult.html', {
             'msg': '上传失败，请检查文件格式是否正确',
@@ -86,25 +96,36 @@ def preprocess_store(request):
         })
 
 
-# 预处理
-def preprocess(request):
+# 数据清洗
+def data_clean(request):
     bv = request.GET.get('bv')
-    Process(bv).preprocess()
-    dataset = pd.read_csv('./resources/dataset/' + bv + '.csv', nrows=10)
-    short_list = dataset.content.tolist()
-    video = Video.objects.get(bv=bv)
-    video.status = 1
-    video.save()
-    # path = './resources/raw_dataset/' + bv + '.csv'
-    # if os.path.exists(path):
-    #     os.remove(path)
-    # else:
-    #     print('文件不存在：' + path)
-
+    clean_list = Process(bv=bv).data_clean()
     return render(request, 'preprocess.html', {
         'flag': 1,
         'bv': bv,
-        'list': short_list,
+        'list': clean_list
+    })
+
+
+# 文本分词
+def word_cut(request):
+    bv = request.GET.get('bv')
+    cut_list = Process(bv=bv).word_cut()
+    return render(request, 'preprocess.html', {
+        'flag': 2,
+        'bv': bv,
+        'list': cut_list
+    })
+
+
+# 去停用词
+def stop_words(request):
+    bv = request.GET.get('bv')
+    stop_list = Process(bv=bv).stop_words()
+    return render(request, 'preprocess.html', {
+        'flag': 3,
+        'bv': bv,
+        'list': stop_list
     })
 
 
@@ -112,7 +133,7 @@ def preprocess(request):
 def store(request):
     bv = request.GET.get('bv')
     ps = Process(bv)
-    ps.stroe()
+    ps.store()
     return render(request, 'preprocess.html', {
         'bv': bv,
         'store_msg': ps.msg,

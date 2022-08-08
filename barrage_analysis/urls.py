@@ -18,14 +18,15 @@ from django.urls import path
 from barrage import views
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('index', views.index),
     path('crawl', views.barrage_crawl),
     path('upload', views.upload),
     path('upload_file', views.upload_file),
     path('preprocess_storage', views.preprocess_store),
-    path('preprocess', views.preprocess),
+    path('data_clean', views.data_clean),
+    path('word_cut', views.word_cut),
+    path('stop_words', views.stop_words),
     path('store', views.store),
     path('analysis', views.analysis),
     path('result', views.result),
